@@ -300,6 +300,15 @@ const BudgetCalculator: React.FC = () => {
                         className="item-range"
                       />
                     </div>
+                    <div className="item-manual-input">
+                      <span className="item-dollar-sign">$</span>
+                      <input
+                        type="number"
+                        value={item.value}
+                        onChange={(e) => handleValueChange(item.name, Number(e.target.value) || 0)}
+                        className="budget-input"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
