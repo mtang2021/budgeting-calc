@@ -7,7 +7,7 @@
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   max-width: 72rem;
-  margin: 0 auto;
+  margin: 1.5rem auto;
   user-select: text;
 }
 
@@ -23,26 +23,34 @@
   margin-bottom: 0.5rem;
 }
 
+/* Container styling */
 .container {
   display: flex;
   flex-direction: column;
+  padding: 1.25rem 1rem;
+  gap: 1.25rem;
 }
 
 @media (min-width: 768px) {
   .container {
     flex-direction: row;
+    gap: 1.5rem;
   }
 }
 
+/* Input section styling */
 .inputs-section {
-  padding: 1rem 1.5rem;
+  padding: 1.25rem;
   background-color: white;
-  border-right: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  margin-bottom: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 @media (min-width: 768px) {
   .inputs-section {
-    width: 33.333333%;
+    width: 30%;
+    margin-bottom: 0;
   }
 }
 
@@ -235,27 +243,36 @@ input[type="range"]:active::-moz-range-thumb {
   color: #2563eb;
 }
 
+/* Chart section styling */
 .chart-section {
-  padding: 1rem 1.5rem;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
+  background-color: white;
+  border-radius: 0.5rem;
+  flex-grow: 1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 @media (min-width: 768px) {
   .chart-section {
-    width: 66.666667%;
+    width: 70%;
   }
 }
 
 .chart-container {
-  height: 20rem;
+  height: 16rem;
   margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .category-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
+  gap: 12px;
+  margin-top: 16px;
 }
 
 @media (min-width: 640px) {
@@ -264,18 +281,15 @@ input[type="range"]:active::-moz-range-thumb {
   }
 }
 
-@media (min-width: 768px) {
-  .category-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 .category-item {
-  padding: 0.5rem;
-  border-radius: 0.25rem;
+  padding: 10px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
 }
 
 .color-dot {
@@ -424,53 +438,61 @@ input[type="range"]:active::-moz-range-thumb {
 /* Additional styles for budget items */
 .budget-items {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 12px;
   margin-top: 24px;
+}
+
+@media (min-width: 640px) {
+  .budget-items {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (min-width: 768px) {
   .budget-items {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .budget-item {
   background-color: white;
   border-radius: 8px;
-  padding: 16px;
+  padding: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .item-header {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .item-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  margin-right: 12px;
+  margin-right: 10px;
   color: white;
 }
 
 .item-name {
   font-weight: 500;
   flex-grow: 1;
+  font-size: 0.9rem;
 }
 
 .item-value {
   font-weight: 600;
   color: #1a202c;
+  font-size: 0.9rem;
 }
 
 .item-slider {
-  padding: 8px 0;
+  padding: 4px 0;
 }
 
 /* Make sure range inputs are styled consistently */
@@ -510,4 +532,121 @@ input[type="range"]:active::-moz-range-thumb {
   cursor: pointer;
   border: 2px solid white;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Improve layout for desktop view */
+@media (min-width: 992px) {
+  .chart-container {
+    height: 18rem;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* Smaller pie chart for better fit with the 3x3 grid */
+.recharts-wrapper {
+  margin: 0 auto;
+}
+
+/* Add styles for budget summary */
+.budget-summary {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 0.875rem;
+}
+
+.text-green {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.text-red {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.red-card {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+/* Add styles for unallocated banner */
+.budget-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.unallocated-banner {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px dashed #d1d5db;
+  margin-bottom: 0.5rem;
+}
+
+.unallocated-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  flex-shrink: 0;
+}
+
+.unallocated-info {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.unallocated-title {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.unallocated-amount {
+  font-weight: 700;
+  font-size: 1.125rem;
 } 
+
+/* Adjust container width at larger screens */
+@media (min-width: 992px) {
+  .container {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .inputs-section {
+    width: 30%;
+    min-width: 320px; /* Ensure minimum width */
+  }
+  
+  .chart-section {
+    width: 70%;
+    min-width: 480px; /* Ensure minimum width */
+  }
+}

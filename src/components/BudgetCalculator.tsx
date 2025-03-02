@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState } from 'react';
 import { PieChart as RechartsChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { Sliders, DollarSign, Home, Lightbulb, ShoppingCart, Car, Heart, Film, PiggyBank, Package, PieChart } from 'lucide-react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Sliders, DollarSign, Home, Lightbulb, ShoppingCart, Car, Heart, Film, PiggyBank, Package, PieChart, AlertCircle } from 'lucide-react';
 import './BudgetCalculator.css';
 
 // Define interfaces for type safety
@@ -17,12 +18,6 @@ interface BudgetItem {
 
 interface TooltipProps {
   active?: boolean;
-  payload?: Array<{
-    payload: BudgetItem;
-  }>;
-}
-
-interface LegendProps {
   payload?: Array<{
     payload: BudgetItem;
   }>;
@@ -150,13 +145,24 @@ const BudgetCalculator: React.FC = () => {
     return null;
   };
   
+  // Calculate budget summary to display Unallocated/Overspent separately
+  const getBudgetSummary = () => {
+    const mainCategories = budget.filter(item => item.name !== 'Unallocated' && item.name !== 'Overspent');
+    const unallocatedItem = budget.find(item => item.name === 'Unallocated' || item.name === 'Overspent');
+    const allocatedTotal = mainCategories.reduce((sum, item) => sum + item.value, 0);
+    
+    return {
+      mainCategories,
+      unallocatedItem,
+      allocatedTotal,
+      remaining: totalIncome - allocatedTotal
+    };
+  };
+
+  const budgetSummary = getBudgetSummary();
+  
   return (
     <div className="budget-calculator">
-      <div className="header">
-        <h1>Budget Calculator</h1>
-        <p>Plan your monthly expenses and visualize your budget</p>
-      </div>
-      
       <div className="container">
         <div className="inputs-section">
           <h2>Income Details</h2>
@@ -206,6 +212,24 @@ const BudgetCalculator: React.FC = () => {
             <h3>Recommended Rent</h3>
             <p className="large">{formatCurrency(recommendedRent)}</p>
           </div>
+
+          {/* Add summary card */}
+          <div className={`card ${budgetSummary.remaining >= 0 ? 'green-card' : 'red-card'}`}>
+            <h3>Budget Summary</h3>
+            <p className="large">{formatCurrency(totalIncome)}</p>
+            <div className="budget-summary">
+              <div className="summary-row">
+                <span>Allocated:</span>
+                <span>{formatCurrency(budgetSummary.allocatedTotal)}</span>
+              </div>
+              <div className="summary-row">
+                <span>{budgetSummary.remaining >= 0 ? 'Remaining:' : 'Overspent:'}</span>
+                <span className={budgetSummary.remaining >= 0 ? 'text-green' : 'text-red'}>
+                  {formatCurrency(Math.abs(budgetSummary.remaining))}
+                </span>
+              </div>
+            </div>
+          </div>
           
           <button 
             className="button" 
@@ -227,7 +251,8 @@ const BudgetCalculator: React.FC = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  outerRadius={120}
+                  outerRadius={90}
+                  innerRadius={30}
                   fill="#8884d8"
                   dataKey="value"
                 >
@@ -240,30 +265,44 @@ const BudgetCalculator: React.FC = () => {
             </ResponsiveContainer>
           </div>
           
-          {/* Budget item sliders */}
+          {/* Budget item sliders in 3x3 grid */}
           {showAdvanced && (
-            <div className="budget-items">
-              {budget.map((item, index) => (
-                <div key={`budget-item-${index}`} className="budget-item">
-                  <div className="item-header">
-                    <div className="item-icon" style={{ backgroundColor: item.color }}>
-                      {item.icon}
-                    </div>
-                    <div className="item-name">{item.name}</div>
-                    <div className="item-value">{formatCurrency(item.value)}</div>
+            <div className="budget-items-container">
+              {budgetSummary.unallocatedItem && (
+                <div className="unallocated-banner">
+                  <div className="unallocated-icon" style={{ backgroundColor: budgetSummary.unallocatedItem.color }}>
+                    {budgetSummary.unallocatedItem.name === 'Unallocated' ? <DollarSign size={18} /> : <AlertCircle size={18} />}
                   </div>
-                  <div className="item-slider">
-                    <input 
-                      type="range"
-                      min="0"
-                      max={totalIncome}
-                      value={item.value}
-                      onChange={(e) => handleValueChange(item.name, Number(e.target.value))}
-                      className="item-range"
-                    />
+                  <div className="unallocated-info">
+                    <div className="unallocated-title">{budgetSummary.unallocatedItem.name}</div>
+                    <div className="unallocated-amount">{formatCurrency(budgetSummary.unallocatedItem.value)}</div>
                   </div>
                 </div>
-              ))}
+              )}
+              
+              <div className="budget-items">
+                {budgetSummary.mainCategories.map((item, index) => (
+                  <div key={`budget-item-${index}`} className="budget-item">
+                    <div className="item-header">
+                      <div className="item-icon" style={{ backgroundColor: item.color }}>
+                        {item.icon}
+                      </div>
+                      <div className="item-name">{item.name}</div>
+                      <div className="item-value">{formatCurrency(item.value)}</div>
+                    </div>
+                    <div className="item-slider">
+                      <input 
+                        type="range"
+                        min="0"
+                        max={totalIncome}
+                        value={item.value}
+                        onChange={(e) => handleValueChange(item.name, Number(e.target.value))}
+                        className="item-range"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
           
